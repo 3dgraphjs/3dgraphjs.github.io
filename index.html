@@ -11,6 +11,9 @@
 				display: block;
 				margin-bottom: 4px;
 			}
+			input {
+				width: 250px;
+			}
 		</style>
 		<script>
 			function renderGraph(s, d=0.01) {
@@ -97,11 +100,14 @@
 			<button onclick="renderGraph('x**2')">z=x^2</button>
 			<button onclick="renderGraph('(x**2)+(y*x)')">z=x^2+yx</button>
 			<!--<button onclick="renderGraph('(x*y)**(1/2)')">z=sqrt of xy</button>-->
+			<button onclick="renderGraph('Math.max(x,y)')"><strong>max of x, y</strong></button>
 		</div>
 		<br />
 		<div>
 			<input id="custom" placeholder="Custom graph (in JS)" style="display: inline-block;" />
 			<button id="customb" style="display: inline-block !important;" onclick="renderGraph(document.getElementById('custom').value.replace(/z=/, ''))">Render</button>
+			<br />
+			<p style="margin-left: 2px;">+10 is red, -10 is blue; white is bigger than +10, grey is smaller than -10; scales go up in 0.2 every 5 pixels; confined in -10<=y<=10 and -10<=x<=10.<br />For custom graphs, pass in anything that'd return some numerical value (e.g. "Math.cos(x*y)").</p>
 		</div>
 	</body>
 </html>
