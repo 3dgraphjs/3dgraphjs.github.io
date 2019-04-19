@@ -19,7 +19,7 @@
 				for (let x=-10; x<10; x += 0.2) {
 					for (let y=-10; y<10; y += 0.2) {
 						window.setTimeout(() => {
-							renderResult(Math.round(x*5)/5, Math.round(y*5)/5, evalInput(s, x, y));
+							renderResult(Math.round(x*5)/5, Math.round(y*5)/5, evalInput(s, x, -y));
 						}, d*i);
 						i++;
 					}
