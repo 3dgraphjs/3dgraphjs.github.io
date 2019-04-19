@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>3DGraph</title>
+		<style>
+			body { margin: 0; }
+			canvas, div {
+				display: inline-block;
+			}
+			button {
+				display: block;
+				margin-bottom: 4px;
+			}
+		</style>
+		<script>
+			function renderGraph(s, d=0.01) {
+				//clearCanvas();
+				let i = 0;
+				for (let x=-10; x<10; x += 0.2) {
+					for (let y=-10; y<10; y += 0.2) {
+						window.setTimeout(() => {
+							renderResult(Math.round(x*5)/5, Math.round(y*5)/5, evalInput(s, x, y));
+						}, d*i);
+						i++;
+					}
+				}
+			}
+
+			function renderResult(x, y, z) {
+				/*if (x%0.2!=0 || y%0.2!=0) {
+					return false;
+				}*/
+				if (x*5!=Math.round(x*5) || y*5!=Math.round(y*5)) {
+					return false;
+				}
+
+				// Each result is a 5x5 square. The results are plotted on 505x505 (-10, -9.8, -9.6, ... 9.6, 9.8, 10).
+
+				var c = document.getElementById("graph");
+				var ctx = c.getContext("2d");
+
+				if (z<=0 && z>=-10) {
+					ctx.fillStyle = "RGB(".concat(25.5*(10+z)).concat(", 0, 255)");
+				} else if (z<=10 && z>0) {
+					ctx.fillStyle = "RGB(255, 0, ".concat(25.5*(10-z)).concat(")");
+				} else if (z>10) {
+					ctx.fillStyle = "#ffffff";
+				} else if (z<-10) {
+					ctx.fillStyle = "#ACACAC";
+				}
+
+				nx=(x+10)*25;
+				ny=(y+10)*25;
+				ctx.fillRect(nx, ny, 5, 5);
+
+				if (x==0 && (5*y)%2!=0) {
+					ctx.fillStyle = "#000000";
+					ctx.fillRect(nx+1, ny, 3, 5);
+				}
+				if (y==0 && (5*x)%2!=0) {
+					ctx.fillStyle = "#000000";
+					ctx.fillRect(nx, ny+1, 5, 3);
+				}
+			}
+
+			function clearCanvas() {
+				var c = document.getElementById("graph");
+				var ctx = c.getContext("2d");
+				ctx.fillStyle = "#75FF00";
+				ctx.fillRect(0, 0, 505, 505)
+
+			}
+
+			function updateInfo() {}
+
+			function evalInput(s, x, y) {
+				s.replace(/x/g, "(Math.round(5*".concat(x).concat(")/5)"));
+				s.replace(/y/g, "Math.round(5*".concat(y).concat(")/5"));
+				return eval(s);
+			}
+		</script>
+	</head>
+
+	<body>
+		<!--  Each pixel represents 0.2 difference  -->
+		<div><canvas id="graph" width="505" height="505" onmousemove="updateInfo();"></canvas></div>
+
+		<div id="inputs" style="width: 505; height: 100; vertical-align: top;">
+			<button onclick="renderGraph('x')"><strong>z=x</strong></button>
+			<button onclick="renderGraph('2*x')"><strong>z=2x</strong></button>
+			<button onclick="renderGraph('x/y')">z=x/y</button>
+			<button onclick="renderGraph('x*y')">z=x*y</button>
+			<button onclick="renderGraph('y*Math.sin(x)')"><strong>z=y*sin(x)</strong></button>
+			<button onclick="renderGraph('y*Math.cos(x)')">z=y*cos(x)</button>
+			<button onclick="renderGraph('y*Math.tan(x)')">z=y*tan(x)</button>
+			<button onclick="renderGraph('x % y')"><strong>z=x % y</strong></button>
+			<button onclick="renderGraph('x**2')">z=x^2</button>
+			<button onclick="renderGraph('(x**2)+(y*x)')">z=x^2+yx</button>
+			<!--<button onclick="renderGraph('(x*y)**(1/2)')">z=sqrt of xy</button>-->
+		</div>
+		<div>
+			<input id="custom" placeholder="Custom graph (in JS)" style="display: inline-block;" />
+			<button id="customb" style="display: inline-block !important;" onclick="renderGraph(document.getElementById('custom').value.replace(/z=/, ''))">Render</button>
+		</div>
+	</body>
+</html>
